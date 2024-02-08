@@ -61,13 +61,19 @@ export class TasksService {
         return task
     }
 
+    delTaskById(id: string): Promise<void> {
+        return this.taskEntityRepository.remove(id)
+    }
+
     // delTaskById(id: string): void {
     //     this.tasks = this.tasks.filter((task) => task.id !== id)
     // }
 
-    // updateTask(id: string, status: TaskStatus){
-    //     const task = this.getTaskById(id)
-    //     task.status = status
-    //     return task
-    // }
+    updateTask(id: string, status: TaskStatus): Promise<Task>{
+        return this.taskEntityRepository.updateTask(id, status)
+    }
+
+    getAllTask(filterDto:GetTaskFilterDto): Promise<Task[]>{
+        return this.taskEntityRepository.getAllTask(filterDto)
+    }
 }
