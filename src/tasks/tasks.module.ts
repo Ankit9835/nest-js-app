@@ -10,4 +10,4 @@ import { TaskRepository } from './tasks.repository';
   controllers: [TasksController],
   providers: [TasksService, TaskRepository]
 })
-export class TasksModule {}
+export class TaskModule {}
