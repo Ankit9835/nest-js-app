@@ -9,4 +9,8 @@ export class AuthService {
     createUser(authcredentialDto: AuthCredentialDto): Promise<void> {
         return this.userEntityRepository.signUp(authcredentialDto)
     }
+
+    logIn(authcredentialDto: AuthCredentialDto): Promise<{accessToken: string}> {
+        return this.userEntityRepository.signIn(authcredentialDto)
+    }
 }
