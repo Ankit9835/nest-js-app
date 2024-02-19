@@ -6,6 +6,7 @@ import { GetTaskFilterDto } from './dto/get-task-filter-dto';
 import { stat } from 'fs';
 import { TaskRepository } from './tasks.repository';
 import { Task } from './task.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -37,8 +38,8 @@ export class TasksService {
     //     return tasks
     // }
 
-    createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-        return this.taskEntityRepository.insert(createTaskDto)
+    createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+        return this.taskEntityRepository.insert(createTaskDto,user)
         // const {title,description} = createTaskDto
 
         // const task = {
@@ -52,8 +53,8 @@ export class TasksService {
         // return task
     }
 
-    async getTaskById(id: string): Promise<Task> {
-        const task = this.taskEntityRepository.findById(id)
+    async getTaskById(id: string, user:User): Promise<Task> {
+        const task = this.taskEntityRepository.findById(id,user)
         if(!task) {
             throw new NotFoundException(`Not found with the given ${id}`)
         }
@@ -61,19 +62,19 @@ export class TasksService {
         return task
     }
 
-    delTaskById(id: string): Promise<void> {
-        return this.taskEntityRepository.remove(id)
+    delTaskById(id: string, user:User): Promise<void> {
+        return this.taskEntityRepository.remove(id,user)
     }
 
     // delTaskById(id: string): void {
     //     this.tasks = this.tasks.filter((task) => task.id !== id)
     // }
 
-    updateTask(id: string, status: TaskStatus): Promise<Task>{
-        return this.taskEntityRepository.updateTask(id, status)
+    updateTask(id: string, status: TaskStatus, user:User): Promise<Task>{
+        return this.taskEntityRepository.updateTask(id, status, user)
     }
 
-    getAllTask(filterDto:GetTaskFilterDto): Promise<Task[]>{
-        return this.taskEntityRepository.getAllTask(filterDto)
+    getAllTask(filterDto:GetTaskFilterDto, user: User): Promise<Task[]>{
+        return this.taskEntityRepository.getAllTask(filterDto,user)
     }
 }
