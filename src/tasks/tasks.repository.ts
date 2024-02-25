@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Repository, EntityRepository } from 'typeorm';
@@ -8,8 +8,10 @@ import { GetTaskFilterDto } from './dto/get-task-filter-dto';
 import { User } from 'src/auth/user.entity';
 
 
+
 @Injectable()
 export class TaskRepository {
+  private logger = new Logger('TaskRepository')
   constructor(
     @InjectRepository(Task)
     private readonly taskEntityRepository: Repository<Task>,
@@ -66,7 +68,14 @@ export class TaskRepository {
         query.andWhere('(task.title LIKE :search OR task.description LIKE :search)', {search: `%${search}%`})
     }
 
-    const task = await query.getMany()
-    return task
+    try {
+      const task = await query.getMany()
+      return task
+    } catch (error) {
+      this.logger.error(`Failed to get the task for user ${user.username}`, error.stack)
+      throw new InternalServerErrorException()
+    }
+
+    
   }
 }

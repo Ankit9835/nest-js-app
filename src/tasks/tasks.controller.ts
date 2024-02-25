@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -20,14 +21,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
 
+
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger()
   constructor(private tasksService: TasksService) {}
 
   @Get()
   getTasks(@Query() filterDto: GetTaskFilterDto, 
           @GetUser() user:User): Promise<Task[]> {
+            this.logger.verbose(`User ${user.username} retrieving all tasks`)
     return this.tasksService.getAllTask(filterDto,user)
   }
 
@@ -46,6 +50,7 @@ export class TasksController {
   @Post()
   createTask(@Body() createTaskDto: CreateTaskDto,
              @GetUser() user:User): Promise<Task> {
+    this.logger.verbose(`${user.username} creating a new task with ${JSON.stringify(createTaskDto)}`)
     return this.tasksService.createTask(createTaskDto, user);
   }
 
