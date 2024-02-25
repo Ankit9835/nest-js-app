@@ -2,9 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TaskModule } from './tasks/tasks.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TaskModule,
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: `${process.env.STAGE}.env`,
+    }),
+    TaskModule,
     TypeOrmModule.forRoot({
       type:'postgres',
       host:'localhost',
